@@ -1,0 +1,20 @@
+#!/usr/bin/ruby
+env = "<%= node.chef_environment %>"
+host = "<%= node["host"] %>"
+ip = "<%= node["ipaddress"] %>"
+
+title = "env:#{env} host:#{host} ip:#{ip}\n"
+
+require_relative "<%= node["base2"]["automation"]["handler_location"] %>/slack_notifier"
+
+docker_output = `docker ps -a`
+docker_output = docker_output.gsub(/"/, '-').gsub(/'/, '-')
+
+attach1 = {
+    "fallback" => "Docker Update from #{host}",
+    "title" => title,
+    "text" => "_docker ps -a on *#{host}*_ ```#{docker_output}```",
+    "color" => "#33ccff"
+}
+
+SlackNotifier.new.post_attachments [attach1]

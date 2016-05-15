@@ -1,0 +1,41 @@
+require_relative "<%= node["base2"]["automation"]["handler_location"] %>/ruby/slack_notifier"
+
+#Tests and example
+x = SlackNotifier.new({icon_emoji: ":skull:"})
+
+test_str = "Message *bold* `code` _italic_ ~strike~ ```triple backtic```"
+
+attach1 = {
+    "fallback" => "Test Update attach1 fallback - https://www.gogle.com.au",
+    "pretext" => "Test update *attach1* pretext",
+    "title" => "9955 Test update 1",
+    "title_link" => "https://www.google.com.au",
+    "text" => "Test *update* attach1 text #{test_str}",
+    "color" => "#7CD197"
+}
+attach2 = {
+    "title" => "9955 Test update 2",
+    "text" => "Test *update* attach2 text",
+    "color" => "#3366ff"
+}
+attach3 = {
+    "fallback" => "Test Update attach3 with fields fallback - https://www.gogle.com.au",
+    "pretext" => "Test update *attach1* with fields pretext",
+    "title" => "9955 Test update 3",
+    "title_link" => "https://www.google.com.au",
+    "text" => "Test *update* attach3 text",
+    "color" => "#ff00ff",
+    "fields" => [
+      { "title" => "field title 1", "value" => "blah *blah*", "short" => false },
+      { "title" => "field title 2", "value" => "blahblah2", "short" => false }
+      ]
+}
+
+x.post_attachments([attach1, attach2, attach3])
+x.post("test message no attach #{test_str}")
+x.post("test message with attach", [attach2])
+begin
+ x.post()
+rescue
+  p "should raise exception"
+end

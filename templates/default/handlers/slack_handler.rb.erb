@@ -1,0 +1,54 @@
+require_relative "<%= node["base2"]["automation"]["handler_location"] %>/ruby/slack_notifier"
+
+class SlackNotifierHandler < Chef::Handler
+  attr_reader :config
+  def initialize(config={})
+    @config = config
+  end
+
+  def report
+    if run_status.failed?
+      send_attach(":boom: Failure on #{node.name}: ```#{run_status.formatted_exception}```", :failed)
+    else
+      cookbooks = run_context.cookbook_collection
+      Chef::Log.info("Cookbooks and versions run: #{cookbooks.keys.map {|x| cookbooks[x].name.to_s + " " + cookbooks[x].version} }")
+      send_attach(":white_check_mark: Chef run succesfully on #{node.name}")
+      #run_status.updated_resources.each {|r| Chef::Log.info "  #{r.to_s}"}
+    end
+
+    #File.open(File.join(@config[:path], "lastrun-updated-resources.json"), "w") do |file|
+    #  updated_resources.each do |resource|
+    #    file.puts(resource.to_s)
+    #  end
+    #end
+  end
+
+  def send(msg, status = :success)
+    #:sunny: :high_brightness:
+    #icon_emoji = status == :success ? ":white_check_mark:" : ":boom:"
+    #changing emojis does not work in repeated messages --- do it in msg
+    #SlackNotifier.new({icon_emoji: icon_emoji}).post msg
+    SlackNotifier.new().post msg
+  end
+
+  def send_attach(msg, status = :success)
+    notifier = SlackNotifier.new
+    color = "#7CD197"
+
+    unless status == :success
+      color = "#ff0000"
+      #notifier.icon_emoji = ":boom:"
+    end
+
+    attach1 = {
+      "fallback" => "Chef run #{node.name} #{status}",
+      "pretext" => "Chef run result on *#{node.name}*",
+      "title" => "#{status}",
+      "text" => "#{msg}",
+      "color" => color
+    }
+
+   notifier.post_attachments [attach1]
+  end
+
+end

@@ -1,0 +1,60 @@
+#!/usr/bin/ruby
+
+require 'net/http'
+require 'net/https'
+require 'json'
+
+class SlackNotifier
+  attr_accessor :slack_url, :icon_emoji, :username, :channel, :hook_url
+
+  def initialize(settings = {})
+    # args.each do |k,v|
+    #   instance_variable_set("@#{k}", v) unless v.nil?
+    # end
+    @slack_url = settings[:slack_url] || "<%= node["base2"]["automation"]["handlers"]["slack"]["web_hook_url"] %>"
+    @icon_emoji = settings[:icon_emoji] ||  "<%= node["base2"]["automation"]["slack"]["icon_emoji"] %>"
+    @username = settings[:username] || "<%= node["base2"]["automation"]["slack"]["username"] %>"
+    @channel = settings[:channel] || "<%= node["base2"]["automation"]["slack"]["channel"] %>"
+    @hook_url = settings[:hook_url] || 'hooks.slack.com'
+  end
+
+  def post(str = nil, attachments = [], settings = {})
+    raise "bad arg exception" unless str.to_s.length > 0 || attachments.count > 0
+    payload = {
+      "channel" => @channel,
+      "username" => @username,
+      "icon_emoji" => @icon_emoji,
+      "attachments" => attachments,
+      "text" => str
+    }
+    send "payload=#{payload.to_json}"
+  end
+
+  def post_attachments(attachments = [], settings = {})
+    raise "bad arg exception" unless attachments.count > 0
+    post = normalise_args settings
+
+    attachments.each do | attachment |
+      attachment["mrkdwn_in"] = attachment["mrkdwn_in"] || ["text", "pretext"]
+    end
+
+    post["attachments"] = attachments
+    send post.to_json
+  end
+
+  def normalise_args(args)
+    args[:slack_url]= args[:slack_url] || @slack_url
+    args[:icon_emoji] = args[:icon_emoji] ||@icon_emoji
+    args[:username] = args[:username] || @username
+    args[:channel] = args[:channel] || @channel
+    args
+  end
+
+  def send(payload)
+    http = Net::HTTP.new(@hook_url, 443)
+    http.use_ssl = true
+    response, return_data = http.post(@slack_url, payload)
+    raise "bad response code #{response.code}" unless response.code == "200"
+  end
+
+end
