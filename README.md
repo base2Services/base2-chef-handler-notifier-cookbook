@@ -1,0 +1,1 @@
+# base2-chef-handler-notifier-cookbook
