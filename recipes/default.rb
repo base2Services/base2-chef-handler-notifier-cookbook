@@ -5,3 +5,4 @@
 # Copyright (c) 2016 base2Services, All Rights Reserved.
 include_recipe "chef_handler"
 include_recipe "base2-chef-handler-notifier::deploy_files"
+include_recipe "base2-chef-handler-notifier::enable_handlers"

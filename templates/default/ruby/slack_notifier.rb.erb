@@ -12,9 +12,9 @@ class SlackNotifier
     #   instance_variable_set("@#{k}", v) unless v.nil?
     # end
     @slack_url = settings[:slack_url] || "<%= node["base2"]["automation"]["handlers"]["slack"]["web_hook_url"] %>"
-    @icon_emoji = settings[:icon_emoji] ||  "<%= node["base2"]["automation"]["slack"]["icon_emoji"] %>"
-    @username = settings[:username] || "<%= node["base2"]["automation"]["slack"]["username"] %>"
-    @channel = settings[:channel] || "<%= node["base2"]["automation"]["slack"]["channel"] %>"
+    @icon_emoji = settings[:icon_emoji] ||  "<%= node["base2"]["automation"]["handlers"]["slack"]["icon_emoji"] %>"
+    @username = settings[:username] || "<%= node["base2"]["automation"]["handlers"]["slack"]["username"] %>"
+    @channel = settings[:channel] || "<%= node["base2"]["automation"]["handlers"]["slack"]["channel"] %>"
     @hook_url = settings[:hook_url] || 'hooks.slack.com'
   end
 
