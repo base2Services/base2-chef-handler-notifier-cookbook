@@ -1,11 +1,11 @@
-#!/usr/bin/ruby
+
 env = "<%= node.chef_environment %>"
 host = "<%= node["host"] %>"
 ip = "<%= node["ipaddress"] %>"
 
 title = "env:#{env} host:#{host} ip:#{ip}\n"
 
-require_relative "<%= node["base2"]["automation"]["handler_location"] %>/slack_notifier"
+require_relative "<%= node["base2"]["automation"]["handler_location"] %>/ruby/slack_notifier"
 
 docker_output = `docker ps -a`
 docker_output = docker_output.gsub(/"/, '-').gsub(/'/, '-')
