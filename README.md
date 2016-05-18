@@ -2,8 +2,8 @@
 
 ### Usage  
 **Works on Windows and Linux**  
-Deploys to 'c:/chef/handlers' OR '/etc/chef/handlers'
-**Mandatory** attribute update to use this:  
+Deploys to 'c:/chef/handlers' OR '/etc/chef/handlers'  
+**Mandatory attribute update** to use this:  
 ```force_default['base2']['automation']['handlers']['slack']['web_hook_url'] = 'https://hooks.slack.com/services/zzzzz/xxx/yyyy'```
 
 ### Scripts and Files Generated
