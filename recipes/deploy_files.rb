@@ -21,3 +21,7 @@ end
 template "#{node['base2']['automation']['handler_location']}/scripts/test_slack.rb" do
   source "scripts/test_slack.rb.erb"
 end
+
+template "#{node['base2']['automation']['handler_location']}/scripts/hello.rb" do
+  source "scripts/hello.rb.erb"
+end

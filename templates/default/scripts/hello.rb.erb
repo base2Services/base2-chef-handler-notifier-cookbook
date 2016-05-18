@@ -7,13 +7,10 @@ title = "env:#{env} host:#{host} ip:#{ip}\n"
 
 require_relative "<%= node["base2"]["automation"]["handler_location"] %>/ruby/slack_notifier"
 
-docker_output = `docker ps -a`
-docker_output = docker_output.gsub(/"/, '-').gsub(/'/, '-')
-
 attach1 = {
-    "fallback" => "Docker Update from #{host}",
+    "fallback" => "Hello from #{host} #{ip} #{env}",
     "title" => title,
-    "text" => "_docker ps -a on *#{host}*_ ```#{docker_output}```",
+    "text" => "hello",
     "color" => "#33ccff"
 }
 
