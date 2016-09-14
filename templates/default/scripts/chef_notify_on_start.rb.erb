@@ -1,0 +1,17 @@
+
+env = "<%= node.chef_environment %>"
+host = "<%= node["hostname"] %>"
+ip = "<%= node["ipaddress"] %>"
+
+title = "env:#{env} host:#{host} ip:#{ip}\n"
+
+require_relative "<%= node["base2"]["automation"]["handler_location"] %>/ruby/slack_notifier"
+
+attach1 = {
+    "fallback" => "Chef-client started on #{host}",
+    "title" => title,
+    "text" => "Chef-client started on *#{host}*",
+    "color" => "#33ccff"
+}
+
+SlackNotifier.new.post_attachments [attach1]
