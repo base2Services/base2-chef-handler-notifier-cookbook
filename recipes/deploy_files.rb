@@ -25,3 +25,7 @@ end
 template "#{node['base2']['automation']['handler_location']}/scripts/hello.rb" do
   source "scripts/hello.rb.erb"
 end
+
+template "#{node['base2']['automation']['handler_location']}/scripts/chef_notify_on_start.rb" do
+  source "scripts/chef_notify_on_start.rb.erb"
+end
